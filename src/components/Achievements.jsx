@@ -1,8 +1,9 @@
 import { motion } from 'framer-motion'
+import { useState } from 'react'
 import { ACHIEVEMENTS } from '../data/content'
 import { fadeUp } from '../motion/variants'
 import { SectionHeading, SectionWrapper } from './SectionWrapper'
-import { ShimmerBorder } from './ui/TiltCard'
+import { TiltCard, ShimmerBorder } from './ui/TiltCard'
 
 const icons = {
   star: (
@@ -30,47 +31,68 @@ const icons = {
 }
 
 function AchievementCard({ item, index, featured = false }) {
+  const [mousePos, setMousePos] = useState({ x: 0, y: 0 })
+  const [isHovered, setIsHovered] = useState(false)
+
+  const handleMouseMove = (e) => {
+    const rect = e.currentTarget.getBoundingClientRect()
+    setMousePos({
+      x: e.clientX - rect.left,
+      y: e.clientY - rect.top,
+    })
+  }
+
   return (
-    <motion.article
-      initial="hidden"
-      whileInView="visible"
-      viewport={{ once: true, margin: '-40px' }}
-      variants={fadeUp}
-      custom={index * 0.06}
-      whileHover={{ y: -10 }}
-      className={`group relative overflow-hidden rounded-3xl border border-white/[0.07] bg-gradient-to-br from-slate/90 to-charcoal cinematic-shadow ${
-        featured ? 'p-10 md:p-12' : 'p-8'
-      }`}
-    >
-      <ShimmerBorder active={featured} className="rounded-3xl" />
-      {featured && (
-        <div className="pointer-events-none absolute inset-0 shimmer-sweep opacity-0 transition group-hover:opacity-100" />
-      )}
+    <TiltCard intensity={featured ? 4 : 6} className="h-full">
+      <motion.article
+        initial="hidden"
+        whileInView="visible"
+        viewport={{ once: true, margin: '-60px' }}
+        variants={fadeUp}
+        custom={index * 0.06}
+        onMouseMove={handleMouseMove}
+        onMouseEnter={() => setIsHovered(true)}
+        onMouseLeave={() => setIsHovered(false)}
+        className={`group relative h-full overflow-hidden rounded-3xl border border-white/[0.07] bg-gradient-to-br from-slate/90 to-charcoal p-8 md:p-10 cinematic-shadow`}
+      >
+        <ShimmerBorder active={featured} className="rounded-3xl" />
+        
+        {/* Ambient background bloom */}
+        <div className="absolute -right-8 -top-8 h-36 w-36 rounded-full bg-gold/5 blur-3xl transition group-hover:bg-gold/12" />
 
-      <div className="absolute -right-8 -top-8 h-36 w-36 rounded-full bg-gold/5 blur-3xl transition group-hover:bg-gold/12" />
+        {/* Dynamic spotlight tracking the mouse */}
+        {isHovered && (
+          <div
+            className="pointer-events-none absolute inset-0 rounded-3xl opacity-100 transition-opacity duration-300"
+            style={{
+              background: `radial-gradient(280px circle at ${mousePos.x}px ${mousePos.y}px, rgba(201, 169, 98, 0.08), transparent 75%)`,
+            }}
+          />
+        )}
 
-      <div className="relative">
-        <div
-          className={`mb-6 flex items-center justify-center rounded-2xl border border-gold/25 bg-gold/10 text-gold gold-glow ${
-            featured ? 'h-16 w-16' : 'h-12 w-12'
-          }`}
-        >
-          <svg width={featured ? 28 : 22} height={featured ? 28 : 22} viewBox="0 0 24 24" aria-hidden="true">
-            {icons[item.icon]}
-          </svg>
+        <div className="relative z-10">
+          <div
+            className={`mb-6 flex items-center justify-center rounded-2xl border border-gold/25 bg-gold/10 text-gold gold-glow ${
+              featured ? 'h-16 w-16' : 'h-12 w-12'
+            }`}
+          >
+            <svg width={featured ? 28 : 22} height={featured ? 28 : 22} viewBox="0 0 24 24" aria-hidden="true">
+              {icons[item.icon]}
+            </svg>
+          </div>
+
+          <p className="text-[10px] font-semibold uppercase tracking-[0.28em] text-muted">{item.title}</p>
+          <p
+            className={`mt-4 font-display text-gradient-gold ${
+              featured ? 'text-7xl md:text-8xl' : 'text-5xl'
+            }`}
+          >
+            {item.value}
+          </p>
+          <p className="mt-5 text-sm leading-[1.75] text-pearl/55">{item.detail}</p>
         </div>
-
-        <p className="text-[10px] font-semibold uppercase tracking-[0.28em] text-muted">{item.title}</p>
-        <p
-          className={`mt-3 font-display text-gradient-gold ${
-            featured ? 'text-7xl md:text-8xl' : 'text-5xl'
-          }`}
-        >
-          {item.value}
-        </p>
-        <p className="mt-5 text-sm leading-[1.75] text-pearl/55">{item.detail}</p>
-      </div>
-    </motion.article>
+      </motion.article>
+    </TiltCard>
   )
 }
 
@@ -79,15 +101,15 @@ export function Achievements() {
   const supporting = ACHIEVEMENTS.filter((a) => !a.featured)
 
   return (
-    <SectionWrapper id="achievements" className="overflow-hidden bg-charcoal/35" ambient>
+    <SectionWrapper id="achievements" className="overflow-hidden bg-[#0a0a0a]" ambient>
       <div className="pointer-events-none absolute inset-0 spotlight opacity-70" aria-hidden="true" />
 
       <div className="relative mx-auto max-w-7xl">
         <SectionHeading
           id="achievements"
           eyebrow="Hall of Legends"
-          title="Trophy Room"
-          subtitle="A museum exhibit of greatness — Ballon d'Or laurels, continental triumphs, and records that define an era."
+          title="Trophy Museum"
+          subtitle="A premium gallery of records and silverware. From five Ballon d'Or conquests to international crowns — verified metrics of an unmatched legacy."
         />
 
         <div className="mb-6 grid gap-5 lg:grid-cols-2">

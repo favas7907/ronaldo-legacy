@@ -59,5 +59,3 @@ export function SectionHeading({ id, eyebrow, title, subtitle, align = 'left' })
     </motion.header>
   )
 }
-
-export { fadeUp }

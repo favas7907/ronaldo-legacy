@@ -1,4 +1,4 @@
-import { motion, useScroll, useSpring } from 'framer-motion'
+import { motion, useSpring } from 'framer-motion'
 
 export function AmbientLayer({ grain = true, gradient = true, className = '' }) {
   return (
@@ -21,9 +21,4 @@ export function ScrollProgressBar({ progress }) {
       style={{ scaleX }}
     />
   )
-}
-
-export function usePageScrollProgress() {
-  const { scrollYProgress } = useScroll()
-  return scrollYProgress
 }

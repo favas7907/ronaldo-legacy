@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
 import { useLocation, useNavigate } from 'react-router-dom'
+import { useScroll } from 'framer-motion'
 
 export function useActiveSection(sectionIds = []) {
   const [active, setActive] = useState(sectionIds[0] ?? 'hero')
@@ -50,4 +51,9 @@ export function useSectionNavigation() {
   }
 
   return { goToSection, pathname: location.pathname }
+}
+
+export function usePageScrollProgress() {
+  const { scrollYProgress } = useScroll()
+  return scrollYProgress
 }
