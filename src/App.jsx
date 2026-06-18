@@ -5,8 +5,7 @@ import { Header } from './components/Header'
 import { OpeningSequence } from './components/OpeningSequence'
 import { Hero } from './components/Hero'
 import { About } from './components/About'
-import { AgeEvolutionTimeline } from './components/AgeEvolutionTimeline'
-import { CareerJourney } from './components/CareerJourney'
+import { CareerOdyssey } from './components/CareerOdyssey'
 import { Achievements } from './components/Achievements'
 import { Statistics } from './components/Statistics'
 import { MemorableMoments } from './components/MemorableMoments'
@@ -21,7 +20,6 @@ function UnifiedPage() {
   const sectionIds = [
     'hero',
     'about',
-    'timeline',
     'journey',
     'achievements',
     'statistics',
@@ -37,7 +35,6 @@ function UnifiedPage() {
     let targetId = 'hero'
     
     if (path === '/about') targetId = 'about'
-    else if (path === '/timeline') targetId = 'timeline'
     else if (path === '/journey') targetId = 'journey'
     else if (path === '/museum') targetId = 'achievements'
     else if (path === '/stats') targetId = 'statistics'
@@ -58,7 +55,6 @@ function UnifiedPage() {
     
     let path = '/'
     if (activeSection === 'about') path = '/about'
-    else if (activeSection === 'timeline') path = '/timeline'
     else if (activeSection === 'journey') path = '/journey'
     else if (activeSection === 'achievements') path = '/museum'
     else if (activeSection === 'statistics') path = '/stats'
@@ -70,7 +66,7 @@ function UnifiedPage() {
   }, [activeSection, showOpening])
 
   return (
-    <div className="relative text-pearl bg-[#030303] overflow-x-hidden min-h-screen">
+    <div className="relative text-pearl bg-[#020202] overflow-x-hidden min-h-screen">
       <AnimatePresence>
         {showOpening && (
           <OpeningSequence onComplete={() => setShowOpening(false)} />
@@ -88,8 +84,7 @@ function UnifiedPage() {
         <main id="main-content">
           <Hero />
           <About />
-          <AgeEvolutionTimeline />
-          <CareerJourney />
+          <CareerOdyssey />
           <Achievements />
           <Statistics />
           <MemorableMoments />
