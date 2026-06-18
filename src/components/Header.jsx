@@ -5,6 +5,8 @@ import { PAGE_ROUTES } from '../data/content'
 import { AmbientLayer, ScrollProgressBar } from './ui/AmbientLayer'
 import { usePageScrollProgress } from '../hooks/useActiveSection'
 
+const PREMIUM_EASE = [0.22, 1, 0.36, 1]
+
 export function Header({ activeSection }) {
   const [menuOpen, setMenuOpen] = useState(false)
   const scrollProgress = usePageScrollProgress()
@@ -24,8 +26,8 @@ export function Header({ activeSection }) {
             }}
           >
             <motion.span
-              whileHover={{ scale: 1.03 }}
-              whileTap={{ scale: 0.98 }}
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.97 }}
               className="relative flex h-11 w-11 items-center justify-center overflow-hidden rounded-xl border border-gold/30 bg-gold/10 font-display text-lg tracking-wider text-gold gold-glow"
             >
               <span className="absolute inset-0 bg-gold/15 opacity-0 transition group-hover:opacity-100" />
@@ -42,9 +44,7 @@ export function Header({ activeSection }) {
             className="hidden items-center gap-1 rounded-full border border-white/10 bg-charcoal/50 px-1.5 py-1 backdrop-blur-xl lg:flex"
           >
             {PAGE_ROUTES.map((route) => {
-              // Highlight based on the scroll-linked active section ID
-              const isActive = activeSection === route.id || 
-                (route.id === 'hero' && activeSection === 'finale') // also count hero for finale etc.
+              const isActive = activeSection === route.id
 
               return (
                 <Link
@@ -67,7 +67,7 @@ export function Header({ activeSection }) {
             })}
           </nav>
 
-          {/* Mobile hamburger menu toggle */}
+          {/* Mobile hamburger */}
           <button
             type="button"
             aria-expanded={menuOpen}
@@ -93,11 +93,10 @@ export function Header({ activeSection }) {
           </button>
         </div>
 
-        {/* Top page scroll progress bar indicator */}
         <ScrollProgressBar progress={scrollProgress} />
       </div>
 
-      {/* Mobile Drawer Menu */}
+      {/* Mobile Drawer */}
       <AnimatePresence>
         {menuOpen && (
           <motion.nav
@@ -105,7 +104,7 @@ export function Header({ activeSection }) {
             initial={{ opacity: 0, height: 0 }}
             animate={{ opacity: 1, height: 'auto' }}
             exit={{ opacity: 0, height: 0 }}
-            transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
+            transition={{ duration: 0.35, ease: PREMIUM_EASE }}
             className="overflow-hidden border-b border-white/10 bg-charcoal/95 backdrop-blur-2xl lg:hidden"
           >
             <ul className="px-5 py-4">

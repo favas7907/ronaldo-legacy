@@ -1,46 +1,23 @@
 import { motion } from 'framer-motion'
+import { memo } from 'react'
 import { MEMORABLE_MOMENTS } from '../data/content'
 import { fadeUp } from '../motion/variants'
 import { SectionHeading, SectionWrapper } from './SectionWrapper'
+import { PremiumPlaceholder } from './ui/PremiumPlaceholder'
 
-// High-fidelity hover transition parameters
-const cardHoverVariants = {
-  initial: { scale: 1, y: 0 },
-  hover: {
-    scale: 1.025,
-    y: -10,
-    transition: { duration: 0.55, ease: [0.22, 1, 0.36, 1] },
-  },
-}
-
-const imageHoverVariants = {
-  initial: { scale: 1.01, filter: 'brightness(0.75) saturate(0.8)' },
-  hover: {
-    scale: 1.08,
-    filter: 'brightness(0.95) saturate(1.05)',
-    transition: { duration: 0.65, ease: [0.22, 1, 0.36, 1] },
-  },
-}
-
-const textGroupVariants = {
-  initial: { y: 20 },
-  hover: {
-    y: 0,
-    transition: { duration: 0.5, ease: [0.22, 1, 0.36, 1] },
-  },
-}
+const PREMIUM_EASE = [0.22, 1, 0.36, 1]
 
 const captionVariants = {
   initial: { opacity: 0, height: 0, marginTop: 0 },
   hover: {
     opacity: 0.85,
     height: 'auto',
-    marginTop: 14,
-    transition: { duration: 0.45, ease: [0.22, 1, 0.36, 1] },
+    marginTop: 12,
+    transition: { duration: 0.4, ease: PREMIUM_EASE },
   },
 }
 
-export function MemorableMoments() {
+export const MemorableMoments = memo(function MemorableMoments() {
   return (
     <SectionWrapper id="moments" className="bg-[#0a0a0a]" ambient>
       <div className="relative mx-auto max-w-7xl">
@@ -48,74 +25,61 @@ export function MemorableMoments() {
           id="moments"
           eyebrow="Defining Chapters"
           title="Iconic Frames"
-          subtitle="Curated moments from a historic career. Hover over each frame to explore the narratives behind football's most iconic occurrences."
+          subtitle="Curated moments from a historic career."
         />
 
-        <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+        <div className="grid gap-4 sm:grid-cols-2 sm:gap-5 lg:grid-cols-3 lg:gap-6">
           {MEMORABLE_MOMENTS.map((moment, i) => (
             <motion.article
               key={moment.title}
               initial="hidden"
               whileInView="visible"
               whileHover="hover"
-              viewport={{ once: true, margin: '-50px' }}
+              viewport={{ once: true, margin: '-40px' }}
               variants={fadeUp}
-              custom={i * 0.05}
-              className="relative aspect-[4/5] overflow-hidden rounded-3xl bg-charcoal cinematic-shadow"
+              custom={i * 0.04}
+              className="group relative aspect-[4/5] overflow-hidden rounded-2xl bg-charcoal cinematic-shadow cursor-pointer sm:rounded-3xl"
             >
-              {/* Nested Card wrapper for scale/lift */}
-              <motion.div
-                variants={cardHoverVariants}
-                className="absolute inset-0 overflow-hidden"
-              >
-                {/* Slow zooming image */}
-                <motion.img
-                  src={moment.image}
-                  alt={moment.alt}
-                  className="h-full w-full object-cover"
-                  variants={imageHoverVariants}
-                  loading="lazy"
-                />
+              {/* Premium placeholder background */}
+              <PremiumPlaceholder
+                accentHex={moment.accentHex}
+                badge={moment.badge}
+                label=""
+                caption=""
+                aspectRatio="auto"
+                className="absolute inset-0 h-full w-full"
+              />
 
-                {/* Dark gradient mapping overlays */}
-                <div className="absolute inset-0 bg-gradient-to-t from-[#030303] via-[#030303]/25 to-transparent transition-opacity duration-500 group-hover:opacity-90" />
-                <div className="absolute inset-0 bg-gradient-to-tr from-void/40 via-transparent to-gold/5 opacity-40" />
+              {/* Dark gradient overlays */}
+              <div className="absolute inset-0 bg-gradient-to-t from-[#030303] via-[#030303]/30 to-transparent" />
 
-                {/* Soft backdrop blur sweep */}
-                <motion.div
-                  className="absolute inset-0 backdrop-blur-0 transition-all duration-500 group-hover:backdrop-blur-[1px]"
-                  aria-hidden="true"
-                />
+              {/* Text Content */}
+              <div className="absolute inset-0 flex flex-col justify-end p-5 sm:p-7 md:p-8">
+                <p className="text-[9px] font-semibold uppercase tracking-[0.3em] sm:text-[10px] sm:tracking-[0.35em]" style={{ color: moment.accentHex }}>
+                  Frame {String(i + 1).padStart(2, '0')}
+                </p>
+                
+                <h3 className="mt-1.5 font-display text-2xl tracking-wide text-pearl sm:mt-2 sm:text-3xl md:text-4xl">
+                  {moment.title}
+                </h3>
 
-                {/* Text Content Overlay */}
-                <motion.div
-                  variants={textGroupVariants}
-                  className="absolute inset-0 flex flex-col justify-end p-8 md:p-10"
-                >
-                  <p className="text-[10px] font-semibold uppercase tracking-[0.35em] text-gold">
-                    Frame {String(i + 1).padStart(2, '0')}
-                  </p>
-                  
-                  <h3 className="mt-2 font-display text-3xl tracking-wide text-pearl md:text-4xl">
-                    {moment.title}
-                  </h3>
+                {/* Caption — visible on hover (desktop) or always visible on mobile */}
+                <p className="mt-2 text-[11px] leading-[1.7] text-pearl/60 sm:mt-3 sm:text-xs sm:opacity-0 sm:group-hover:opacity-100 sm:transition-opacity sm:duration-500">
+                  {moment.caption}
+                </p>
+              </div>
 
-                  {/* Rising/revealing caption */}
-                  <motion.p
-                    variants={captionVariants}
-                    className="overflow-hidden text-xs leading-[1.8] text-pearl/80"
-                  >
-                    {moment.caption}
-                  </motion.p>
-                </motion.div>
-
-                {/* Premium Gold border ring overlay */}
-                <div className="absolute inset-0 border border-white/5 transition-colors duration-500 group-hover:border-gold/25 pointer-events-none rounded-3xl" />
-              </motion.div>
+              {/* Hover border */}
+              <div
+                className="absolute inset-0 border border-white/[0.04] pointer-events-none rounded-2xl transition-colors duration-400 group-hover:border-white/10 sm:rounded-3xl"
+                style={{
+                  '--hover-border': `${moment.accentHex}25`,
+                }}
+              />
             </motion.article>
           ))}
         </div>
       </div>
     </SectionWrapper>
   )
-}
+})

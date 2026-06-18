@@ -5,8 +5,8 @@ const base =
   'group relative inline-flex items-center justify-center overflow-hidden rounded-full text-xs font-semibold uppercase tracking-[0.25em] transition'
 
 const variants = {
-  primary: `${base} border border-gold/50 bg-gold/10 px-8 py-3.5 text-gold-light hover:shadow-[0_0_40px_rgba(201,169,98,0.2)]`,
-  secondary: `${base} border border-white/15 px-8 py-3.5 text-pearl/80 hover:border-white/30 hover:bg-white/5 hover:text-pearl`,
+  primary: `${base} border border-gold/50 bg-gold/10 px-6 py-3 text-[10px] text-gold-light hover:shadow-[0_0_40px_rgba(201,169,98,0.2)] sm:px-8 sm:py-3.5 sm:text-xs`,
+  secondary: `${base} border border-white/15 px-6 py-3 text-[10px] text-pearl/80 hover:border-white/30 hover:bg-white/5 hover:text-pearl sm:px-8 sm:py-3.5 sm:text-xs`,
 }
 
 const MotionLink = motion.create(Link)
